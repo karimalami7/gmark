@@ -4,7 +4,7 @@
 #include "randomgen.h"
 #include <iostream>
 
-namespace config {
+namespace config { 
 
 using namespace std;
 
@@ -59,7 +59,7 @@ public:
                 const distribution & odistrib, const distribution & idistrib);
 };
 
-class schem {
+class schem { // schema is a vectore of edges. In config file : source -> target
 public:
     vector<edge> edges;
     
@@ -122,14 +122,14 @@ public:
     workload_selectivity selectivity;
 };
 
-class config {
+class config { // classe config store the input configuration
 public:
     string input;
     size_t nb_nodes;
     size_t nb_edges;
-    vector<type> types;
+    vector<type> types; //list of nodes type 
     distribution node_distribution;     
-    vector<predicate> predicates;
+    vector<predicate> predicates; //list of predicates type
     distribution predicate_distribution;
     schem schema;
     vector<workload> workloads;

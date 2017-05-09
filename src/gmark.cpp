@@ -15,6 +15,8 @@
 #include <chrono>
 #include <sys/time.h>
 
+int size_graph =0; //store the number of nodes, to be used to identify edges later
+
 namespace graph {
 
 vector<size_t> generate_random_slots(pair<size_t,size_t> range, const distribution & distrib) {
@@ -61,7 +63,7 @@ void abstract_graph_writer::add_random_edges1(config::edge & c_edge) {
             //size_t rnd = rand() % nb_objects; // todo
             size_t object = object_node_range.first + rnd;
             //if (! has_edge(subject, c_edge.predicate, object)) {
-            add_edge(subject, c_edge.predicate, object);
+            add_edge(subject, c_edge.predicate, object,c_edge.subject_type,c_edge.object_type);
                     //    break;
                 //}    
         }
@@ -97,7 +99,7 @@ void abstract_graph_writer::add_random_edges2(config::edge & c_edge) {
         n = m;
     }
     for (size_t i = 0; i < n; i++) {
-        add_edge(subject_slots[i], c_edge.predicate, object_slots[i]);
+        add_edge(subject_slots[i], c_edge.predicate, object_slots[i],c_edge.subject_type,c_edge.object_type);
     }
 }
 
@@ -124,6 +126,7 @@ void abstract_graph_writer::build_graph (config::config & conf, report::report &
     for (auto & typeconfig : conf.types) {
         add_vertices(type, typeconfig.size);
         type++;
+        size_graph+=typeconfig.size;
     }
     
     rep.nb_nodes = nb_nodes;
@@ -164,11 +167,11 @@ void abstract_graph_writer::add_vertices(size_t type, size_t size) {
     nb_nodes += size;
 }
 
-void abstract_graph_writer::add_edge(size_t subject, size_t predicate, size_t object) {
+void abstract_graph_writer::add_edge(size_t subject, size_t predicate, size_t object, size_t subject_type, size_t object_type) {
     created_edges[predicate]++;
     nb_edges++;
     nb_edges_by_type[predicate]++;
-    print_edge(subject, predicate, object);
+    print_edge(subject, predicate, object, subject_type, object_type);
 }
 
 
@@ -176,13 +179,13 @@ ntriple_graph_writer::ntriple_graph_writer (ostream & s) {
     stream = &s;
 }
 
-void ntriple_graph_writer::print_edge(size_t subject, size_t predicate, size_t object) {
-    *stream << subject << " ";
+void ntriple_graph_writer::print_edge(size_t subject, size_t predicate, size_t object, size_t subject_type, size_t object_type) {
+    *stream << conf->types[subject_type].alias <<":"<< subject << " " ;
     string alias = conf->predicates[predicate].alias;
     if (conf->print_alias && alias.size() > 0)
-	*stream << alias;
+	*stream << alias<<":" << size_graph++;
     else
         *stream << predicate;
-    *stream << " " << object << "\n";
+    *stream << " " << conf->types[object_type].alias << ":" << object << "\n";
 }
 }

@@ -179,7 +179,7 @@ int main(int argc, char ** argv) {
         }
     }
     
-    config::config conf;
+    config::config conf; // instantiation configuration
     if (nb_nodes >= 0) {
         conf.nb_nodes = nb_nodes;
     }
@@ -194,7 +194,7 @@ int main(int argc, char ** argv) {
     conf.complete_config();
     
     
-    if(graph_file != "") {
+    if(graph_file != "") {  // graph generation, stored in graph_file
         report::report rep;
 
         ofstream graph_stream;
