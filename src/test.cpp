@@ -4,8 +4,6 @@
 #include "config.h"
 #include "gmark.h"
 #include "configparser.h"
-#include "workload.h"
-#include "workload2.h"
 #include "report.h"
 
 void print_report(report::report & rep) {
@@ -209,39 +207,6 @@ int main(int argc, char ** argv) {
         html_graph_report(conf, rep, report_stream);
     }
     
-    if (workload_file != "") {
-        report::workload_report rep;
-
-        ofstream workload_stream;
-        workload_stream.open(workload_file);
-        workload::workload wl;
-        if(selectivity) {
-            workload2::generate_workload(conf, wl, rep);
-        }
-        else {
-            workload::generate_workload(conf, wl);
-        }
-        workload::write_xml(wl, workload_stream, conf);
-        workload_stream.close();
-
-        ofstream report_stream;
-        report_stream.open(report_directory + "/workload.html");
-        html_workload_report(conf, rep, report_stream);  
-
-        /*
-        workload2::matrix mat;
-        workload2::distance_matrix_between_types(conf, mat);
-        cout << mat << endl;
-        workload2::graph graph;
-        compute_graph_from_matrix(mat, 4, graph);
-        workload2::matrix_of_paths mat2;
-        number_of_paths(graph, config::selectivity::CONSTANT, 3, mat2);
-        vector<workload2::triple> path;
-        generate_random_path(graph, mat2, -1, 3, path);
-        for (auto & triple : path) {
-            cout << triple << endl;
-        }
-        */
-    }
+    
 }
 
