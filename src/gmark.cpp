@@ -128,7 +128,7 @@ void abstract_graph_writer::build_graph (config::config & conf, report::report &
         type++;
         size_graph+=typeconfig.size;
     }
-    
+    size_graph++;
     rep.nb_nodes = nb_nodes;
 
     created_edges.clear();
